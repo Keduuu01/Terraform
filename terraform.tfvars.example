@@ -1,0 +1,5 @@
+aws_region = "ap-south-1"
+project_name = "terraform-web"
+ami_id = "ami-0f918f7e67a3323f0"
+instance_type = "t3.micro"
+ssh_cidr = "0.0.0.0/0"
