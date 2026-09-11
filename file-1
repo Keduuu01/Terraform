@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#08051a" />
+  <title>Little Krishna | Janmashtami</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ["Georgia", "serif"]
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 50% 25%, rgba(74, 36, 160, .34), transparent 34%),
+        radial-gradient(circle at 15% 80%, rgba(0, 188, 212, .14), transparent 28%),
+        radial-gradient(circle at 85% 70%, rgba(255, 193, 7, .12), transparent 25%),
+        #08051a;
+      color: #fff;
+    }
+
+    /* ===== 3D FESTIVE LIGHTING ===== */
+    .scene {
+      perspective: 1400px;
+    }
+
+    .krishna-card {
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform .18s ease-out, box-shadow .35s ease;
+      box-shadow:
+        0 45px 100px rgba(0, 0, 0, .65),
+        0 0 45px rgba(124, 58, 237, .18);
+    }
+
+    .krishna-card::before {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      z-index: -1;
+      border-radius: 28px;
+      background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        rgba(255, 215, 70, .9) 55deg,
+        transparent 105deg,
+        rgba(99, 102, 241, .8) 175deg,
+        transparent 235deg,
+        rgba(34, 211, 238, .75) 310deg,
+        transparent 360deg
+      );
+      filter: blur(13px);
+      opacity: .65;
+      animation: rotateGlow 7s linear infinite;
+    }
+
+    .krishna-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: 24px;
+      background: linear-gradient(
+        120deg,
+        transparent 15%,
+        rgba(255, 255, 255, .15) 25%,
+        transparent 38%
+      );
+      transform: translateX(-120%);
+      animation: shine 5s ease-in-out infinite;
+    }
+
+    @keyframes rotateGlow {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes shine {
+      0%, 55% { transform: translateX(-120%); }
+      80%, 100% { transform: translateX(120%); }
+    }
+
+    .light-orb {
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      filter: blur(65px);
+      pointer-events: none;
+      opacity: .5;
+      animation: floatOrb 7s ease-in-out infinite;
+    }
+
+    .orb-one {
+      top: 10%;
+      left: -90px;
+      background: rgba(99, 102, 241, .65);
+    }
+
+    .orb-two {
+      right: -100px;
+      bottom: 5%;
+      background: rgba(251, 191, 36, .55);
+      animation-delay: -3s;
+    }
+
+    @keyframes floatOrb {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+      50% { transform: translate3d(25px, -30px, 0) scale(1.12); }
+    }
+
+    .particle {
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #fcd34d;
+      box-shadow: 0 0 12px #fcd34d;
+      pointer-events: none;
+      animation: fall linear infinite;
+      opacity: .7;
+    }
+
+    @keyframes fall {
+      from { transform: translateY(-10vh) translateX(0); opacity: 0; }
+      15% { opacity: .8; }
+      to { transform: translateY(110vh) translateX(60px); opacity: 0; }
+    }
+
+    .gold-text {
+      background: linear-gradient(90deg, #fde68a, #fff7cc, #f59e0b);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid rgba(255, 255, 255, .16);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 15px 40px rgba(0,0,0,.28);
+    }
+
+    .view-btn {
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 10px 25px rgba(0,0,0,.3),
+        0 0 28px rgba(251,191,36,.28);
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .view-btn:hover {
+      transform: translateY(-3px) scale(1.025);
+      box-shadow:
+        0 16px 35px rgba(0,0,0,.4),
+        0 0 40px rgba(251,191,36,.42);
+    }
+
+    .view-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.35), transparent 70%);
+      transform: translateX(-120%);
+      transition: transform .7s ease;
+    }
+
+    .view-btn:hover::before { transform: translateX(120%); }
+
+    .modal {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .3s ease, visibility .3s ease;
+    }
+
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-image {
+      transform: scale(.92);
+      transition: transform .35s ease;
+    }
+
+    .modal.active .modal-image { transform: scale(1); }
+
+    .audio-btn {
+      transition: transform .2s ease, box-shadow .25s ease;
+    }
+
+    .audio-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(0,0,0,.45), 0 0 28px rgba(255,255,255,.16);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- =========================================================
+       S3 ASSET REFERENCES
+       Upload these two files into the SAME S3 folder as index.html:
+       1. krishna-sketch.jpg
+       2. background-flute.mp3
+       ========================================================= -->
+
+  <!-- Floating decorative lights -->
+  <div class="light-orb orb-one"></div>
+  <div class="light-orb orb-two"></div>
+
+  <!-- Falling golden particles -->
+  <div id="particles" aria-hidden="true"></div>
+
+  <main class="relative z-10 min-h-screen px-5 py-10 sm:px-8 lg:px-12">
+    <section class="mx-auto flex min-h-[92vh] max-w-6xl flex-col items-center justify-center">
+
+      <!-- Header -->
+      <div class="mb-8 text-center">
+        <div class="mb-3 inline-flex items-center gap-2 rounded-full glass px-4 py-2 text-xs tracking-[.25em] text-amber-200 uppercase">
+          ✦ Janmashtami Celebration ✦
+        </div>
+
+        <h1 class="font-display text-4xl font-bold leading-tight sm:text-6xl">
+          <span class="gold-text">Little Krishna</span>
+        </h1>
+
+        <p class="mx-auto mt-3 max-w-xl text-sm leading-6 text-indigo-100/75 sm:text-base">
+          A little flute, a divine smile, and a magical forest of light.
+        </p>
+      </div>
+
+      <!-- 3D Image Card -->
+      <div id="scene" class="scene relative w-full max-w-md">
+        <div
+          id="krishnaCard"
+          class="krishna-card rounded-[28px] bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-950 p-3 sm:p-4"
+        >
+          <div class="relative overflow-hidden rounded-[22px] border border-white/10 bg-black/30">
+            <!-- EXACT IMAGE FILE REFERENCE -->
+            <img
+              src="krishna-sketch.jpg"
+              alt="Little Krishna playing the flute in a colorful forest"
+              class="block h-auto w-full object-cover"
+              loading="eager"
+            />
+
+            <!-- Image bottom glow -->
+            <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/75 to-transparent"></div>
+
+            <div class="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3">
+              <div>
+                <p class="text-xs tracking-[.2em] text-amber-200 uppercase">Divine Moment</p>
+                <p class="mt-1 font-display text-lg font-semibold text-white">Murli Manohar</p>
+              </div>
+
+              <span class="rounded-full glass px-3 py-1 text-xs text-amber-100">
+                🦚 ✨
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- View button -->
+      <button
+        id="viewBtn"
+        type="button"
+        class="view-btn mt-8 inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 px-7 py-3.5 font-semibold text-slate-950"
+        aria-label="View Krishna artwork"
+      >
+        <span class="text-lg">◉</span>
+        <span>View Artwork</span>
+        <span class="text-lg">↗</span>
+      </button>
+
+      <p class="mt-4 text-center text-xs text-indigo-100/50">
+        Move your pointer over the artwork for a 3D lighting effect
+      </p>
+
+      <!-- Footer -->
+      <div class="mt-10 text-center text-xs text-white/35">
+        Made for a peaceful Janmashtami celebration
+      </div>
+    </section>
+  </main>
+
+  <!-- Artwork modal -->
+  <div
+    id="modal"
+    class="modal fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-5 backdrop-blur-md"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Krishna artwork preview"
+  >
+    <div class="relative max-h-[92vh] max-w-3xl">
+      <button
+        id="closeBtn"
+        type="button"
+        class="glass absolute -right-2 -top-2 z-10 flex h-10 w-10 items-center justify-center rounded-full text-xl text-white"
+        aria-label="Close artwork"
+      >×</button>
+
+      <img
+        src="krishna-sketch.jpg"
+        alt="Large Little Krishna artwork"
+        class="modal-image max-h-[88vh] w-auto rounded-2xl border border-white/20 object-contain shadow-2xl"
+      />
+    </div>
+  </div>
+
+  <!-- Floating audio control -->
+  <button
+    id="audioToggle"
+    type="button"
+    class="audio-btn glass fixed bottom-5 right-5 z-40 flex items-center gap-2 rounded-full px-4 py-3 text-sm font-medium text-white"
+    aria-label="Play background flute music"
+    title="Play / Pause flute music"
+  >
+    <span id="audioIcon" class="text-lg">▶</span>
+    <span id="audioText">Play Flute</span>
+  </button>
+
+  <!-- EXACT AUDIO FILE REFERENCE -->
+  <audio id="bgAudio" src="background-flute.mp3" loop preload="auto"></audio>
+
+  <script>
+    // =========================================================
+    // Background audio
+    // Browsers block autoplay until the user interacts.
+    // First click/touch attempts to start the flute naturally.
+    // =========================================================
+    const audio = document.getElementById("bgAudio");
+    const audioToggle = document.getElementById("audioToggle");
+    const audioIcon = document.getElementById("audioIcon");
+    const audioText = document.getElementById("audioText");
+
+    let userPausedAudio = false;
+
+    function updateAudioUI() {
+      if (audio.paused) {
+        audioIcon.textContent = "▶";
+        audioText.textContent = "Play Flute";
+        audioToggle.setAttribute("aria-label", "Play background flute music");
+      } else {
+        audioIcon.textContent = "❚❚";
+        audioText.textContent = "Pause Flute";
+        audioToggle.setAttribute("aria-label", "Pause background flute music");
+      }
+    }
+
+    async function tryStartAudio() {
+      if (userPausedAudio || !audio.paused) return;
+
+      try {
+        await audio.play();
+        updateAudioUI();
+      } catch (error) {
+        // Autoplay can still be blocked; the visible button remains available.
+      }
+    }
+
+    audioToggle.addEventListener("click", async (event) => {
+      event.stopPropagation();
+
+      if (audio.paused) {
+        userPausedAudio = false;
+        try {
+          await audio.play();
+        } catch (error) {}
+      } else {
+        userPausedAudio = true;
+        audio.pause();
+      }
+
+      updateAudioUI();
+    });
+
+    ["pointerdown", "touchstart", "click", "keydown"].forEach((eventName) => {
+      document.addEventListener(eventName, tryStartAudio, { once: true, passive: true });
+    });
+
+    audio.addEventListener("play", updateAudioUI);
+    audio.addEventListener("pause", updateAudioUI);
+    updateAudioUI();
+
+    // =========================================================
+    // 3D mouse / pointer tilt + moving light
+    // =========================================================
+    const scene = document.getElementById("scene");
+    const card = document.getElementById("krishnaCard");
+
+    function moveCard(event) {
+      const rect = scene.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width;
+      const y = (event.clientY - rect.top) / rect.height;
+
+      const rotateY = (x - 0.5) * 14;
+      const rotateX = (0.5 - y) * 14;
+
+      card.style.transform =
+        `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+    }
+
+    function resetCard() {
+      card.style.transform = "rotateX(0deg) rotateY(0deg) translateZ(0)";
+    }
+
+    scene.addEventListener("pointermove", moveCard);
+    scene.addEventListener("pointerleave", resetCard);
+
+    // =========================================================
+    // View artwork modal
+    // =========================================================
+    const modal = document.getElementById("modal");
+    const viewBtn = document.getElementById("viewBtn");
+    const closeBtn = document.getElementById("closeBtn");
+
+    function openModal() {
+      modal.classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      modal.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+
+    viewBtn.addEventListener("click", openModal);
+    closeBtn.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) closeModal();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeModal();
+    });
+
+    // =========================================================
+    // Golden floating particles
+    // =========================================================
+    const particleContainer = document.getElementById("particles");
+
+    for (let i = 0; i < 32; i++) {
+      const particle = document.createElement("span");
+      particle.className = "particle";
+      particle.style.left = `${Math.random() * 100}vw`;
+      particle.style.animationDuration = `${5 + Math.random() * 8}s`;
+      particle.style.animationDelay = `${Math.random() * -10}s`;
+      particle.style.transform = `scale(${0.5 + Math.random() * 1.5})`;
+      particleContainer.appendChild(particle);
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+
+
