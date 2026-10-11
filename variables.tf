@@ -11,7 +11,7 @@ variable "project_name" {
 }
 
 variable "ami_id" {
-  description = "Amazon Linux 2 AMI ID for ap-south-1"
+  description = "Amazon Linux 2 AMI ID for the selected region"
   type        = string
   default     = "ami-0f918f7e67a3323f0"
 }
@@ -23,7 +23,7 @@ variable "instance_type" {
 }
 
 variable "ssh_cidr" {
-  description = "CIDR allowed to SSH into the instance"
+  description = "CIDR allowed to SSH into the instance; set this to your public IP/32"
   type        = string
-  default     = "0.0.0.0/0"
+  default     = "127.0.0.1/32"
 }
