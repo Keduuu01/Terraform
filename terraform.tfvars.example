@@ -1,5 +1,8 @@
-aws_region = "ap-south-1"
+aws_region   = "ap-south-1"
 project_name = "terraform-web"
-ami_id = "ami-0f918f7e67a3323f0"
+ami_id       = "ami-0f918f7e67a3323f0"
 instance_type = "t3.micro"
-ssh_cidr = "0.0.0.0/0"
+
+# Replace with your public IP in CIDR notation, e.g. "203.0.113.10/32".
+# Do not use 0.0.0.0/0 for SSH access.
+ssh_cidr = "127.0.0.1/32"
