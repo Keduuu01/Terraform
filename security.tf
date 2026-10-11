@@ -4,7 +4,7 @@ resource "aws_security_group" "ec2" {
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    description = "SSH"
+    description = "SSH - restrict ssh_cidr to your public IP"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
@@ -20,7 +20,7 @@ resource "aws_security_group" "ec2" {
   }
 
   ingress {
-    description = "HTTPS"
+    description = "HTTPS (ingress only; TLS must be configured separately)"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
